@@ -1,11 +1,10 @@
-package com.example.demo;
+package com.example.demo.Utility;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.UUID;
 
 public class JwtDecoder {
 

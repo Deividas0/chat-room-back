@@ -1,10 +1,12 @@
 package com.example.demo.Users;
 
+import com.example.demo.Utility.JwtDecoder;
+import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 
-import static com.example.demo.Constants.*;
+import static com.example.demo.Utility.Constants.*;
 
 @Repository
 public class UserRepository {
@@ -47,8 +49,8 @@ public class UserRepository {
                 return false;
             }
         } catch (SQLException e) {
-            e.printStackTrace(); // Print the stack trace if there’s an SQL exception
-            throw e; // Rethrow the exception after logging it
+            e.printStackTrace();
+            throw e;
         }
     }
 
@@ -74,7 +76,7 @@ public class UserRepository {
             throw e; // Rethrow the exception after logging it
         }
     }
-
+    // Log in
     public int login(String emailAddress, String password) throws SQLException {
         final String sql = "SELECT * FROM users WHERE email_address = ? AND password = ?";
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
@@ -97,6 +99,7 @@ public class UserRepository {
         return 0;
     }
 
+    // Forgot password
     public String forgotPassword(String emailAddress) throws SQLException {
         final String sql = "SELECT password FROM users WHERE email_address = ?";
         try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
@@ -116,6 +119,45 @@ public class UserRepository {
             }
         }
         return "";
+    }
+
+    // Check how many users are banned
+    public int numberOfBannedUsers() throws SQLException {
+        final String sql = "SELECT COUNT(*) AS total_banned_users \n" +
+                "FROM users \n" +
+                "WHERE restriction_end_date IS NOT NULL;";
+        try (Connection connection = DriverManager.getConnection(URL,USERNAME,PASSWORD)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("total_banned_users");
+            }
+        }
+        return 0; // Return 0 if there are no results
+    }
+
+    // Giving email receiving username
+    public String emailToUsername(String emailAddress) throws SQLException {
+        final String sql = "SELECT username FROM users WHERE email_address = ?";
+        try (Connection connection = DriverManager.getConnection(URL,USERNAME,PASSWORD)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, emailAddress);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getString("username");
+            }
+        }
+        return "";
+    }
+
+    // Giving jwtToken receiving email
+    public String jwtTokenToEmail(String jwtToken){
+        Claims claims = JwtDecoder.decodeJwt(jwtToken);
+        return claims.get("Email").toString();
     }
 
 }

@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.Utility;
 
 public class Constants {
     public final static String URL = "jdbc:mysql://localhost:3306/javadarbas";

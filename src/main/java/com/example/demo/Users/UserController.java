@@ -1,13 +1,15 @@
 package com.example.demo.Users;
 
 import com.example.demo.Emails.EmailsRepository;
-import com.example.demo.JwtGenerator;
+import com.example.demo.Utility.JwtGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:5500", allowCredentials = "true")
 @RestController
@@ -33,10 +35,22 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user) throws SQLException {
+    public ResponseEntity<Map<String, String>> login(@RequestBody User user) throws SQLException {
+        String username = userService.emailToUsername(user.getEmailAddress());
         int id = userService.login(user.getEmailAddress(), user.getPassword());
-        return (id == 0) ? new ResponseEntity<>("Invalid username or password", HttpStatus.BAD_REQUEST)
-                : new ResponseEntity<>(JwtGenerator.generateJwt(user.getUsername(), user.getEmailAddress(), id), HttpStatus.OK);
+
+        if (id == 0) {
+            return new ResponseEntity<>(Map.of("error", "Invalid username or password"), HttpStatus.BAD_REQUEST);
+        }
+
+        String token = JwtGenerator.generateJwt(user.getUsername(), user.getEmailAddress(), id);
+
+        // Create a map to hold both the token and the username
+        Map<String, String> response = new HashMap<>();
+        response.put("token", token);
+        response.put("username", username);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/forgotpassword")

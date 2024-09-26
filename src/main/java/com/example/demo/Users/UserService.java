@@ -28,4 +28,13 @@ public class UserService {
     public String forgotPassword(String emailAddress) throws SQLException {
         return userRepository.forgotPassword(emailAddress);
     }
+    public int numberOfBannedUsers() throws SQLException {
+        return userRepository.numberOfBannedUsers();
+    }
+    public String jwtTokenToEmail(String jwtToken){
+        return userRepository.jwtTokenToEmail(jwtToken);
+    }
+    public String emailToUsername(String emailAddress) throws SQLException {
+        return userRepository.emailToUsername(emailAddress);
+    }
 }
