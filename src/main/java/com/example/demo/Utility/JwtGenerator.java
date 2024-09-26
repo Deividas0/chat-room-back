@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.Utility;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

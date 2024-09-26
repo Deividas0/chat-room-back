@@ -19,6 +19,9 @@ public class Message {
         this.messageDate = messageDate;
     }
 
+    public Message() {
+    }
+
     public int getId() {
         return id;
     }
