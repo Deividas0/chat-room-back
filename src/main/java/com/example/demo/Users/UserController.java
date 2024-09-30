@@ -64,4 +64,5 @@ public class UserController {
             return new ResponseEntity<>("Invalid email address", HttpStatus.BAD_REQUEST);
         }
     }
+
 }

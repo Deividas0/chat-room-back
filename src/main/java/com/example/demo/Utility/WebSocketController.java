@@ -74,6 +74,7 @@ public class WebSocketController {
     public void addUser(String username) {
         connectedUsers.add(username);
         messagingTemplate.convertAndSend("/topic/onlinelist", connectedUsers);
+//        messagingTemplate.convertAndSend("/topic/messages", username + " has joined the chat.");
     }
 
     @MessageMapping("leave")
@@ -81,5 +82,7 @@ public class WebSocketController {
     public void removeUser(String username) {
         connectedUsers.remove(username);
         messagingTemplate.convertAndSend("/topic/onlinelist", connectedUsers);
+//        messagingTemplate.convertAndSend("/topic/messages", username + " has left the chat.");
     }
+
 }
