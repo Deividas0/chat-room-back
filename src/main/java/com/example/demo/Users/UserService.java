@@ -37,4 +37,8 @@ public class UserService {
     public String emailToUsername(String emailAddress) throws SQLException {
         return userRepository.emailToUsername(emailAddress);
     }
+    public void banUser(String username, String bannedUntill) throws SQLException {
+        userRepository.banUser(username, bannedUntill);
+    }
+
 }

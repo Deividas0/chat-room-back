@@ -160,4 +160,18 @@ public class UserRepository {
         return claims.get("Email").toString();
     }
 
+    // Banning user
+    public void banUser(String username, String bannedUntill) throws SQLException {
+        final String sql = "UPDATE users SET restriction_end_date = ? WHERE username = ?";
+        try (Connection connection = DriverManager.getConnection(URL,USERNAME,PASSWORD)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setString(1, bannedUntill);
+            preparedStatement.setString(2, username);
+
+            preparedStatement.executeUpdate();
+        }
+    }
+
+
 }
